@@ -40,23 +40,23 @@ __C.TRAIN = edict()
 # Scales to use during training (can list multiple scales)
 # Each scale is the pixel size of an image's shortest side
 # 训练尺度最短边Scale=600
-__C.TRAIN.SCALES = (600,)
+__C.TRAIN.SCALES = (1024,)
 
 # Max pixel size of the longest side of a scaled input image
 # 训练尺度最长边Scale=1000
-__C.TRAIN.MAX_SIZE = 1000
+__C.TRAIN.MAX_SIZE = 1024
 
 # Images to use per minibatch
 # 训练minibatch包含两张图片
-__C.TRAIN.IMS_PER_BATCH = 2
+__C.TRAIN.IMS_PER_BATCH = 1
 
 # Minibatch size (number of regions of interest [ROIs])
 # minibatch为128，也就是ROI的大小
-__C.TRAIN.BATCH_SIZE = 128
+__C.TRAIN.BATCH_SIZE = 64
 
 # Fraction of minibatch that is labeled foreground (i.e. class > 0)
 # minibatch中前景样本所占比例为0.25
-__C.TRAIN.FG_FRACTION = 0.25
+__C.TRAIN.FG_FRACTION = 0.4
 
 # Overlap threshold for a ROI to be considered foreground (if >= FG_THRESH)
 # ROI中被考虑为前景的overlap阈值为0.5
@@ -76,6 +76,9 @@ __C.TRAIN.USE_FLIPPED = True
 # 训练bounding box回归器
 __C.TRAIN.BBOX_REG = True
 
+# 防止np.exp中loss爆炸
+__C.BBOX_XFORM_CLIP = np.log(1000. / 16.)
+
 # Overlap required between a ROI and ground-truth box in order for that ROI to
 # be used as a bounding-box regression training example
 # BBOX阈值，只有ROI与gt的重叠区域大于阈值，这样的ROI才能用作bb回归的训练样本
@@ -83,7 +86,7 @@ __C.TRAIN.BBOX_THRESH = 0.5
 
 # Iterations between snapshots
 # 每迭代10000次生成一次snapshoot
-__C.TRAIN.SNAPSHOT_ITERS = 10000
+__C.TRAIN.SNAPSHOT_ITERS = 5000
 
 # solver.prototxt specifies the snapshot path prefix, this adds an optional
 # infix to yield the path: <prefix>[_<infix>]_iters_XYZ.caffemodel
@@ -147,7 +150,7 @@ __C.TRAIN.RPN_PRE_NMS_TOP_N = 12000
 __C.TRAIN.RPN_POST_NMS_TOP_N = 2000
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
 # Proposal的宽高都应该大于RPN_MIN_SIZE，否则，映射到conv5上不足一个像素点
-__C.TRAIN.RPN_MIN_SIZE = 16
+__C.TRAIN.RPN_MIN_SIZE = 3
 # Deprecated (outside weights)
 __C.TRAIN.RPN_BBOX_INSIDE_WEIGHTS = (1.0, 1.0, 1.0, 1.0)
 # Give the positive RPN examples weight of p * 1 / {num positives}
@@ -203,7 +206,7 @@ __C.TEST.RPN_PRE_NMS_TOP_N = 6000
 ## Number of top scoring boxes to keep after applying NMS to RPN proposals
 __C.TEST.RPN_POST_NMS_TOP_N = 300
 # Proposal height and width both need to be greater than RPN_MIN_SIZE (at orig image scale)
-__C.TEST.RPN_MIN_SIZE = 16
+__C.TEST.RPN_MIN_SIZE = 3
 
 
 #

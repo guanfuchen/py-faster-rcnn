@@ -7,6 +7,7 @@
 
 """Train a Fast R-CNN network."""
 
+import google.protobuf.text_format
 import caffe
 from fast_rcnn.config import cfg
 import roi_data_layer.roidb as rdl_roidb

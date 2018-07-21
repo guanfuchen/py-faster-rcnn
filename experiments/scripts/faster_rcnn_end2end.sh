@@ -38,6 +38,18 @@ case $DATASET in
     PT_DIR="coco"
     ITERS=490000
     ;;
+  wider)
+    TRAIN_IMDB="wider_train"
+    TEST_IMDB="wider_test"
+    PT_DIR="face"
+    ITERS=80000
+    ;;
+  ijba)
+    TRAIN_IMDB="ijba_train_split_1"
+    TEST_IMDB="ijba_test_split_1"
+    PT_DIR="face"
+    ITERS=100000
+    ;;
   *)
     echo "No dataset given"
     exit
@@ -48,7 +60,8 @@ LOG="experiments/logs/faster_rcnn_end2end_${NET}_${EXTRA_ARGS_SLUG}.txt.`date +'
 exec &> >(tee -a "$LOG")
 echo Logging output to "$LOG"
 
-time ./tools/train_net.py --gpu ${GPU_ID} \
+#time ./tools/train_net.py --gpu ${GPU_ID} \
+time python ./tools/train_net.py \
   --solver models/${PT_DIR}/${NET}/faster_rcnn_end2end/solver.prototxt \
   --weights data/imagenet_models/${NET}.v2.caffemodel \
   --imdb ${TRAIN_IMDB} \
@@ -60,9 +73,9 @@ set +x
 NET_FINAL=`grep -B 1 "done solving" ${LOG} | grep "Wrote snapshot" | awk '{print $4}'`
 set -x
 
-time ./tools/test_net.py --gpu ${GPU_ID} \
-  --def models/${PT_DIR}/${NET}/faster_rcnn_end2end/test.prototxt \
-  --net ${NET_FINAL} \
-  --imdb ${TEST_IMDB} \
-  --cfg experiments/cfgs/faster_rcnn_end2end.yml \
-  ${EXTRA_ARGS}
+# time ./tools/test_net.py --gpu ${GPU_ID} \
+#   --def models/${PT_DIR}/${NET}/faster_rcnn_end2end/test.prototxt \
+#   --net ${NET_FINAL} \
+#   --imdb ${TEST_IMDB} \
+#   --cfg experiments/cfgs/faster_rcnn_end2end.yml \
+#   ${EXTRA_ARGS}
