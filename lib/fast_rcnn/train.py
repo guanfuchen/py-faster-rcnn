@@ -1,3 +1,4 @@
+# coding=utf-8
 # --------------------------------------------------------
 # Fast R-CNN
 # Copyright (c) 2015 Microsoft
@@ -42,6 +43,7 @@ class SolverWrapper(object):
             print 'done'
 
         self.solver = caffe.SGDSolver(solver_prototxt)
+        # 与训练网络模型加载
         if pretrained_model is not None:
             print ('Loading pretrained model '
                    'weights from {:s}').format(pretrained_model)
@@ -112,8 +114,10 @@ class SolverWrapper(object):
             model_paths.append(self.snapshot())
         return model_paths
 
+# 获取训练的roidb
 def get_training_roidb(imdb):
     """Returns a roidb (Region of Interest database) for use in training."""
+    # 是否通过水平镜像flip增加数据集训练
     if cfg.TRAIN.USE_FLIPPED:
         print 'Appending horizontally-flipped training examples...'
         imdb.append_flipped_images()
